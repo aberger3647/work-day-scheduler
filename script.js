@@ -1,15 +1,22 @@
   var currentDay = moment().format('MMMM Do YYYY');
   var currentHour = moment().format('HH');
-  var container = $('.container')
+  var container = $('.container');
   $('#currentDay').text(currentDay);
-
-  for( var i = 9; i <= 17; i++ ){
+// create divs, buttons and hour labels
+  for (var i = 9; i <= 17; i++ ) {
     var row = $('<div>');
     row.addClass('row time-block');
     var p = $('<p>');
     p.addClass('hour col-md-1');
     p.attr('id', i);
-    p.text(i + " am");
+    p.text(i);
+    if (i < 12) {
+        p.text(i + " am");
+    } else if (i === 12) {
+        p.text(12 + " pm");
+    } else {
+        p.text(i - 12 + " pm");
+    }
     var textArea = $('<textarea>');
     textArea.addClass('description col-md-10');
     var button = $('<button>');
@@ -18,21 +25,26 @@
     icon.addClass('fas fa-save');
     button.append(icon);
     row.append(p, textArea, button);
-   container.append(row);
+    container.append(row);
 }
-
+// when button is clicked, run clickHandler function
 var button = $('button');
 button.on('click', clickHandler);
-
+// take the value input into the textarea and the hour of that textarea and save into localstorage
 function clickHandler() {
     var data = $(this).siblings('textarea').val();
     var hour = $(this).siblings('p').attr('id');
     console.log(data);
     localStorage.setItem(hour, data);
 }
-
+// set text area div background color to color code based on the hour
 $('.time-block').each(function() {
     var timeBlockHour = $(this).children('p').attr('id');
+    console.log(typeof timeBlockHour);
+    console.log(typeof currentHour);
+    currentHour = parseInt(currentHour);
+    timeBlockHour = parseInt(timeBlockHour);
+    console.log(typeof currentHour);
     if (currentHour > timeBlockHour) {
         $(this).children('textarea').addClass('past');
     } else if (currentHour === timeBlockHour) {
@@ -42,7 +54,10 @@ $('.time-block').each(function() {
     }
 })
 
-// use moment to make it 12 hour time
-// use if statement for am pm
-// use if statement for 09 
-// use getItem to save task
+// load saved info
+// function loadLocalStorage() {
+//     for (var i = 9; i <= 17; i++ ) {
+//     var x = localStorage.getItem(i);
+// }
+
+// loadLocalStorage();
